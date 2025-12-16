@@ -1,0 +1,28 @@
+# Ignore Jupyter notebook checkpoints
+**/.ipynb_checkpoints/
+
+# Ignore Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore environment files
+.env
+.venv/
+*.conda
+*.ipynb_checkpoints
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+
+
+
+
+# Ignore logs
+monitoring/*.log
+
+# Ignore virtual environment folders
+SADOP_env/
+venv/
