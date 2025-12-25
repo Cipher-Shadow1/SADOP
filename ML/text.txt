@@ -1,0 +1,238 @@
+# -----------------------------
+#  Imports and constants
+# -----------------------------
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import gymnasium as gym
+from stable_baselines3 import PPO
+
+# Actions
+ACTION_DO_NOTHING = 0
+ACTION_ADD_INDEX = 1
+ACTION_REMOVE_INDEX = 2
+NUM_ACTIONS = 3
+
+# State features
+STATE_FEATURES = [
+    "rows_returned",
+    "tables_count",
+    "query_length",
+    "has_sum",
+    "has_group_by",
+    "has_where",
+    "cpu_usage",
+    "memory_usage"
+]
+NUM_STATE_FEATURES = len(STATE_FEATURES)
+
+# Load dataset
+df_rl = pd.read_csv("../data/ml_features_clean.csv")
+
+df_rl.describe()
+
+
+import gymnasium as gym
+from gymnasium import spaces
+import numpy as np
+
+# Action constants
+ACTION_DO_NOTHING = 0
+ACTION_ADD_INDEX = 1
+ACTION_REMOVE_INDEX = 2
+NUM_ACTIONS = 3
+
+
+class IndexOptimizationEnv(gym.Env):
+    """
+    RL Environment for Index Optimization (Realistic & Balanced)
+    """
+
+    def __init__(self, df, state_features):
+        super().__init__()
+
+        self.df = df.reset_index(drop=True)
+        self.state_features = state_features
+
+        # Observation space
+        self.observation_space = spaces.Box(
+            low=-np.inf,
+            high=np.inf,
+            shape=(len(state_features),),
+            dtype=np.float32
+        )
+
+        # Action space
+        self.action_space = spaces.Discrete(NUM_ACTIONS)
+        self.action_meaning = {
+            0: "DO_NOTHING",
+            1: "ADD_INDEX",
+            2: "REMOVE_INDEX"
+        }
+
+        # Data-driven thresholds
+        self.slow_threshold = 0.08     # top 25% slow
+        self.fast_threshold = 0.03     # very fast queries
+        self.memory_threshold = 192.0  # high memory usage
+
+        self.current_step = 0
+
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
+        self.current_step = np.random.randint(0, len(self.df))
+        state = self.df.loc[self.current_step, self.state_features].astype(np.float32).values
+        return state, {}
+
+    def step(self, action):
+        row = self.df.loc[self.current_step]
+        base_time = float(row["query_time"])
+        memory = float(row["memory_usage"])
+
+        # ---- Simulate action effect ----
+        if action == ACTION_ADD_INDEX:
+            new_time = base_time * np.random.uniform(0.65, 0.85)
+
+        elif action == ACTION_REMOVE_INDEX:
+            if base_time < self.fast_threshold and memory > self.memory_threshold:
+                # Safe index removal
+                new_time = base_time * np.random.uniform(0.95, 1.0)
+            else:
+                # Harmful index removal
+                new_time = base_time * np.random.uniform(1.05, 1.25)
+
+        else:  # DO_NOTHING
+            new_time = base_time
+
+        # ---- Reward calculation (SINGLE source of truth) ----
+        improvement = (base_time - new_time) / base_time
+
+        reward = improvement
+
+        # Penalties / bonuses
+        if action == ACTION_DO_NOTHING and base_time > self.slow_threshold:
+            reward -= 0.05
+
+        if action == ACTION_REMOVE_INDEX and new_time > base_time:
+            reward -= 0.1
+
+        if action == ACTION_ADD_INDEX and base_time < self.fast_threshold:
+            reward -= 0.05
+
+        terminated = True
+        truncated = False
+
+        next_state = row[self.state_features].astype(np.float32).values
+        return next_state, reward, terminated, truncated, {}
+
+
+from stable_baselines3 import PPO
+
+env = IndexOptimizationEnv(df_rl, state_features)
+
+# Initialize PPO agent
+model = PPO(
+    "MlpPolicy",
+    env,
+    verbose=1,
+    tensorboard_log="./rl_tensorboard/"
+)
+
+model.learn(total_timesteps=100000)
+# I tested with a 1.000.000 step same result 
+
+
+state, _ = env.reset()
+action, _ = model.predict(state, deterministic=True)
+
+action_int = int(action)  
+
+print("Chosen action:", action_int)
+print("Action meaning:", env.action_meaning[action_int])
+
+
+# -----------------------------
+# Log all chosen actions for 50 episodes
+# -----------------------------
+episodes = 21000
+all_actions = []
+
+for ep in range(episodes):
+    state, _ = env.reset()
+    done = False
+    ep_actions = []
+    
+    while not done:
+        action, _ = model.predict(state, deterministic=True)
+        action = int(action)
+        
+        # Safety
+        if state[0] < 1000 and action == ACTION_ADD_INDEX:
+            action = ACTION_DO_NOTHING
+
+        ep_actions.append(action)
+        next_state, reward, terminated, truncated, _ = env.step(action)
+        done = terminated
+
+    all_actions.append(ep_actions)
+
+# Convert to DataFrame
+df_all_actions = pd.DataFrame(all_actions).fillna(-1).astype(int)
+df_all_actions.index = [f"Episode_{i+1}" for i in range(episodes)]
+df_all_actions
+
+
+
+from collections import Counter
+
+flat_actions = [a for ep_actions in all_actions for a in ep_actions]
+
+counts = Counter(flat_actions)
+
+action_summary = {
+    0: counts.get(0, 0),  # DO_NOTHING
+    1: counts.get(1, 0),  # ADD_INDEX
+    2: counts.get(2, 0),  # REMOVE_INDEX
+}
+
+action_summary
+
+
+episodes = 21000
+total_reward = 0
+improvements = []
+
+for _ in range(episodes):
+    state, _ = env.reset()
+    action, _ = model.predict(state, deterministic=True)
+    action = int(action)
+
+    row = env.df.loc[env.current_step]
+    base_time = row["query_time"]
+
+    _, reward, _, _, _ = env.step(action)
+    total_reward += reward
+
+    improvements.append(reward)
+
+print("Average reward:", total_reward / episodes)
+print("Mean improvement:", np.mean(improvements))
+
+
+def human_dba_decision(row):
+    return ACTION_ADD_INDEX if row["query_time"] > 0.08 else ACTION_DO_NOTHING
+
+matches = 0
+
+for _ in range(21000):
+    state, _ = env.reset()
+    row = env.df.loc[env.current_step]
+
+    rl_action, _ = model.predict(state, deterministic=True)
+    rl_action = int(rl_action)
+
+    human_action = human_dba_decision(row)
+
+    if rl_action == human_action:
+        matches += 1
+
+print("RL vs Human agreement rate:", matches / 21000)
