@@ -92,7 +92,13 @@
     @{ Date = "2025-12-30T09:20:00"; Msg = "notebooks: normalize numeric features and finalize train/test split"; Files = @("notebooks/13_Normalize_Numeric_Features _Train_Test Split.ipynb") },
     @{ Date = "2025-12-30T11:45:00"; Msg = "notebooks: build ML diagnostic notebook for query performance"; Files = @("notebooks/14_ML Diagnostic Engine.ipynb") },
     @{ Date = "2025-12-30T15:10:00"; Msg = "notebooks: verify data quality and consistency across features"; Files = @("notebooks/14_Verify Data Quality & Consistency.ipynb") },
-    @{ Date = "2025-12-30T17:55:00"; Msg = "tooling: iterate on second-wave backdated commit script"; Files = @("backdate_commits_wave2.ps1") }
+    @{ Date = "2025-12-30T17:55:00"; Msg = "tooling: iterate on second-wave backdated commit script"; Files = @("backdate_commits_wave2.ps1") },
+
+    # 2025-12-31
+    @{ Date = "2025-12-31T09:15:00"; Msg = "notebooks: tweak feature normalization thresholds before final training"; Files = @("notebooks/13_Normalize_Numeric_Features _Train_Test Split.ipynb") },
+    @{ Date = "2025-12-31T11:30:00"; Msg = "notebooks: refine ML diagnostic plots for slow query prediction"; Files = @("notebooks/14_ML Diagnostic Engine.ipynb") },
+    @{ Date = "2025-12-31T14:20:00"; Msg = "notebooks: polish data quality checks and add summary cells"; Files = @("notebooks/14_Verify Data Quality & Consistency.ipynb") },
+    @{ Date = "2025-12-31T17:45:00"; Msg = "tooling: finalize backdated commit wave2 script for SADOP"; Files = @("backdate_commits_wave2.ps1") }
  )
 
  foreach ($c in $commits) {
