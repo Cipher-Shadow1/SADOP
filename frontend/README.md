@@ -43,3 +43,12 @@ pm install to setup.
 
 ## Deployment
 Deploy to Vercel.
+
+
+## Installation
+Run 
+pm install to setup.
+
+
+## Deployment
+Deploy to Vercel.
