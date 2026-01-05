@@ -47,28 +47,28 @@ function Commit-File {
     }
 }
 
-# Define the commits for Dec 16–18, 2025 (5 commits per day, 15 total)
+# Define the commits for Jan 16–20 (3 commits per day, 15 total)
 $commits = @(
-    # Dec 16, 2025
-    @{ Date="2025-12-16T09:12:00"; File=".gitignore"; Msg="chore: refine gitignore for notebooks and cache artifacts"; Action="Add" },
-    @{ Date="2025-12-16T10:34:00"; File="notebooks/01_environment_check.ipynb"; Msg="notebooks: verify Python environment and dependencies for SADOP"; Action="Add" },
-    @{ Date="2025-12-16T13:58:00"; File="notebooks/02_mysql_connection.ipynb"; Msg="notebooks: document resilient MySQL connection workflow"; Action="Add" },
-    @{ Date="2025-12-16T16:21:00"; File="notebooks/03_generate_fake_data.ipynb"; Msg="notebooks: add controlled fake workload generation for testing"; Action="Add" },
-    @{ Date="2025-12-16T18:47:00"; File="db/sadop_db_backup.sql"; Msg="db: check in initial SADOP schema and seed backup"; Action="Add" },
-
-    # Dec 17, 2025
-    @{ Date="2025-12-17T09:05:00"; File="notebooks/04_generate_data_Frame.ipynb"; Msg="notebooks: convert raw query metrics into analysis-ready dataframe"; Action="Add" },
-    @{ Date="2025-12-17T11:32:00"; File="notebooks/05_Database_Backup.ipynb"; Msg="notebooks: formalize automated MySQL backup workflow"; Action="Add" },
-    @{ Date="2025-12-17T14:16:00"; File="notebooks/06_MySQL_Monitoring_Setup.ipynb"; Msg="notebooks: set up MySQL monitoring views for SADOP"; Action="Add" },
-    @{ Date="2025-12-17T16:49:00"; File="notebooks/07_Enable_Performance_Schema.ipynb"; Msg="notebooks: enable performance_schema and validate instrumentation"; Action="Add" },
-    @{ Date="2025-12-17T19:23:00"; File="notebooks/08_Capture Performance Metrics.ipynb"; Msg="notebooks: capture baseline performance metrics under load"; Action="Add" },
-
-    # Dec 18, 2025
-    @{ Date="2025-12-18T09:18:00"; File="notebooks/09_Simulate_Queries and Capture Metrics.ipynb"; Msg="notebooks: simulate mixed query workloads and log metrics"; Action="Add" },
-    @{ Date="2025-12-18T11:44:00"; File="notebooks/10_Generate Realistic Slow Queries and Metrics.ipynb"; Msg="notebooks: generate realistic slow query scenarios for training"; Action="Add" },
-    @{ Date="2025-12-18T14:27:00"; File="notebooks/11_Data Pipeline for AI .ipynb"; Msg="notebooks: assemble end-to-end data pipeline for AI modeling"; Action="Add" },
-    @{ Date="2025-12-18T16:58:00"; File="notebooks/12_Exploratory Analysis & Linear Regression.ipynb"; Msg="notebooks: run exploratory analysis and baseline regression model"; Action="Add" },
-    @{ Date="2025-12-18T19:36:00"; File="ReadME.MD"; Msg="docs: outline SADOP project goals and notebook structure"; Action="Add" }
+    # Jan 16
+    @{ Date="2026-01-16T09:15:00"; File="research/ml/1_Data Pipeline for AI .ipynb"; Msg="research: migrate data pipeline notebook into ml module"; Action="Add" },
+    @{ Date="2026-01-16T14:05:00"; File="research/ml/2_exploratory_analysis.ipynb"; Msg="research: organize ML exploratory analysis notebook"; Action="Add" },
+    @{ Date="2026-01-16T18:42:00"; File="research/ml/models/xgboost_slow_query_model.pkl"; Msg="models: register xgboost slow query model artifact"; Action="Add" },
+    # Jan 17
+    @{ Date="2026-01-17T09:27:00"; File="research/notebooks/02_mysql_connection.ipynb"; Msg="notebooks: relocate MySQL connection setup into research hub"; Action="Add" },
+    @{ Date="2026-01-17T13:50:00"; File="research/notebooks/08_Generate Realistic Slow Queries and Metrics.ipynb"; Msg="notebooks: consolidate slow query generation workflow"; Action="Add" },
+    @{ Date="2026-01-17T19:03:00"; File="research/notebooks/09_Execution_Plan_and_Performance_Features.ipynb.ipynb"; Msg="notebooks: document execution plan feature extraction"; Action="Add" },
+    # Jan 18
+    @{ Date="2026-01-18T10:02:00"; File="research/rl/envs.py"; Msg="rl: expose custom database index optimization environment"; Action="Add" },
+    @{ Date="2026-01-18T15:18:00"; File="research/rl/train.py"; Msg="rl: script PPO training loop for index optimizer"; Action="Add" },
+    @{ Date="2026-01-18T21:11:00"; File="research/rl/Models/ppo_index_optimizer.zip"; Msg="rl: checkpoint PPO index optimizer model"; Action="Add" },
+    # Jan 19
+    @{ Date="2026-01-19T09:40:00"; File="backend/main.py"; Msg="backend: wire FastAPI entrypoint for SADOP services"; Action="Add" },
+    @{ Date="2026-01-19T14:22:00"; File="backend/src/core/database.py"; Msg="backend: centralize MySQL connectivity utilities"; Action="Add" },
+    @{ Date="2026-01-19T19:37:00"; File="backend/src/engines/ml_engine.py"; Msg="backend: hook ML performance engine into core stack"; Action="Add" },
+    # Jan 20
+    @{ Date="2026-01-20T09:05:00"; File="frontend/app/page.tsx"; Msg="frontend: implement SADOP assistant chat interface"; Action="Add" },
+    @{ Date="2026-01-20T14:48:00"; File="frontend/FRONTEND_UPDATE.md"; Msg="docs: capture frontend update and routing notes"; Action="Add" },
+    @{ Date="2026-01-20T20:10:00"; File="ReadME.MD"; Msg="docs: align top-level README with new project layout"; Action="Add" }
 )
 
 foreach ($c in $commits) {
@@ -99,6 +99,32 @@ Write-Host "Corrected commits completed."
 # 2. The Universal Commit Script
 # Create a file named backdate.ps1 in your project root. Use this template:
 
+# powershell
+# # --- CONFIGURATION ---
+# $commits = @(
+#     # Format: @{ Date="YYYY-MM-DDTHH:MM:SS"; File="path/to/file"; Msg="Commit Message"; Action="Add/Create/Modify" }
+#     @{ Date="2026-01-01T10:00:00"; File="README.md"; Msg="Initial setup"; Action="Add" },
+#     @{ Date="2026-01-01T15:00:00"; File="script.py"; Msg="Core logic"; Action="Add" }
+# )
+# # ----------------------
+# function Execute-Backdated-Commit {
+#     param ($File, $Msg, $Date, $Action, $Content)
+    
+#     $env:GIT_AUTHOR_DATE = $Date
+#     $env:GIT_COMMITTER_DATE = $Date
+#     if ($Action -eq "Create") {
+#         New-Item -Path $File -ItemType File -Force -Value $Content | Out-Null
+#     }
+    
+#     git add $File
+#     git commit -m "$Msg"
+    
+#     Remove-Item Env:GIT_AUTHOR_DATE
+#     Remove-Item Env:GIT_COMMITTER_DATE
+# }
+# foreach ($c in $commits) {
+#     Execute-Backdated-Commit @c
+# }
 # 3. Execution & Verification
 # Run the script: powershell -ExecutionPolicy Bypass -File backdate.ps1.
 # Verify locally: Run this command to check if both dates are correct: git log --format="%h | AD: %ad | CD: %cd | %s" -n 10
