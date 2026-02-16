@@ -1,9 +1,0 @@
-{
-    "actions": {
-        "0": "NO_OP",
-        "1": "ADD_INDEX",
-        "2": "DROP_INDEX"
-    },
-    "reward_design": "Query time reduction minus index cost",
-    "state": "Query features + index presence"
-}
