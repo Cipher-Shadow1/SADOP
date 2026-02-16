@@ -66,7 +66,7 @@ This project is organized into a modular, professional structure:
 
 **SADOP (Smart AI-Driven Database Optimization Platform)** is an academic project that demonstrates the integration of:
 
-- **Machine Learning** for query performance prediction (XGBoost classifier, 95% accuracy)
+- **Machine Learning** for query performance prediction (Random Forest / XGBoost classifiers, 98.45% accuracy)
 - **Reinforcement Learning** for intelligent index recommendations (PPO agent)
 - **Large Language Models** for natural language interaction (Llama 3.3 70B via Groq)
 - **Real-time Database Monitoring** with automated optimization suggestions
@@ -93,7 +93,7 @@ SADOP provides:
 
 ### 🎯 Core Capabilities
 
-- **ML-Powered Diagnostics**: Predicts whether a query will be FAST or SLOW with 95% accuracy
+- **ML-Powered Diagnostics**: Predicts whether a query will be FAST or SLOW with 98.45% accuracy
 - **RL-Driven Optimization**: Recommends CREATE INDEX statements based on workload analysis
 - **LLM Query Generation**: Generates optimized SQL from natural language requests
 - **Intelligent Routing**: Automatically classifies user intent and routes to appropriate tools
@@ -200,7 +200,7 @@ graph TD
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/your-username/SADOP.git
+git clone https://github.com/Cipher-Shadow1/SADOP.git
 cd SADOP
 ```
 
@@ -329,136 +329,135 @@ Your database may be slow due to:
 
 ```text
 SADOP/
+|
 ├── .gitignore
-├── backdate_commits_fixed.ps1
-├── test_git.ps1
-├── hero.jpg
-├── SADOP.jpg
-├── ReadME.MD
-├── scripts/
-│   └── verify_backend.py
-├── backend/
+├── Data
+│   ├── Dataml_features_clean.csv
+│   ├── X_test.csv
+│   ├── X_train.csv
+│   ├── accounts.csv
+│   ├── logs.csv
+│   ├── ml_features.csv
+│   ├── slow_query_metrics.csv
+│   ├── transactions.csv
+│   ├── users.csv
+│   ├── y_test.csv
+│   └── y_train.csv
+├── ML
+│   ├── .gitkeep
+│   ├── 1_Data Pipeline for AI .ipynb
+│   ├── 2_exploratory_analysis.ipynb
+│   ├── 3_Normalize_Numeric_Features _Train_Test Split.ipynb
+│   ├── 4_Verify Data Quality & Consistency.ipynb
+│   ├── 5_ML Diagnostic Engine — Predicting Query Performance .ipynb
+│   ├── models
+│   │   ├── logistic_regression_reference.pkl
+│   │   ├── random_forest_reference.pkl
+│   │   ├── scaler.pkl
+│   │   └── xgboost_slow_query_model.pkl
+│   ├── models V2
+│   │   ├── logistic_regression.pkl
+│   │   ├── random_forest.pkl
+│   │   └── xgboost.pkl
+│   └── text.txt
+├── backend
 │   ├── main.py
-│   └── src/
-│       ├── core/
+│   └── src
+│       ├── core
 │       │   ├── database.py
 │       │   └── llm_router.py
-│       └── engines/
+│       └── engines
 │           ├── llm_engine.py
 │           ├── ml_engine.py
 │           └── rl_engine.py
-├── frontend/
-│   ├── app/
+├── db
+│   └── sadop_db_backup.sql
+├── docs
+│   ├── explanations
+│   │   ├── ML_DISPLAY_TEST.md
+│   │   ├── QUERY_GEN_ERROR_FIX.md
+│   │   ├── RL_INTEGRATION.md
+│   │   ├── ROUTING_EXPLANATION.md
+│   │   └── rl_readme.md
+│   ├── professor
+│   │   ├── PROFESSOR_ANSWERS.md
+│   │   └── PROFESSOR_FINAL_ANSWERS.md
+│   └── reports
+│       └── Projet-Homework.pdf
+├── frontend
+│   ├── .gitignore
+│   ├── FRONTEND_UPDATE.md
+│   ├── README.md
+│   ├── app
 │   │   ├── favicon.ico
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
-│   ├── components/
+│   ├── components
 │   │   └── README.md
-│   ├── hooks/
-│   │   └── README.md
-│   ├── lib/
-│   │   └── README.md
-│   ├── public/
-│   │   ├── file.svg
-│   │   ├── globe.svg
-│   │   ├── next.svg
-│   │   ├── vercel.svg
-│   │   └── window.svg
-│   ├── types/
-│   │   └── README.md
-│   ├── FRONTEND_UPDATE.md
-│   ├── README.md
-│   ├── .gitignore
 │   ├── eslint.config.mjs
+│   │
+│   ├── next-env.d.ts
 │   ├── next.config.ts
-│   ├── package.json
 │   ├── package-lock.json
+│   ├── package.json
 │   ├── postcss.config.mjs
-│   └── tsconfig.json
-├── data/
-│   ├── accounts.csv
-│   ├── users.csv
-│   ├── transactions.csv
-│   ├── logs.csv
-│   ├── generated_queries.csv
-│   ├── ml_features.csv
-│   ├── ml_features_clean.csv
-│   ├── slow_query_metrics.csv
-│   ├── slow_query_metrics_filtered.csv
-│   ├── slow_query_metrics-Copy1.csv
-│   ├── query_execution_features.csv
-│   ├── rl_decision_log.csv
-│   ├── X_train.csv
-│   ├── X_test.csv
-│   ├── y_train_cls.csv
-│   ├── y_test_cls.csv
-│   ├── y_train_reg.csv
-│   └── y_test_reg.csv
-├── docs/
-│   ├── explanations/
-│   │   ├── ML_DISPLAY_TEST.md
-│   │   ├── QUERY_GEN_ERROR_FIX.md
-│   │   ├── ReadME2.MD
-│   │   ├── RL_INTEGRATION.md
-│   │   ├── rl_readme.md
-│   │   └── ROUTING_EXPLANATION.md
-│   ├── professor/
-│   │   ├── PROFESSOR_ANSWERS.md
-│   │   └── PROFESSOR_FINAL_ANSWERS.md
-│   └── reports/
-│       └── Projet-Homework.pdf
-├── research/
-│   ├── ml/
-│   │   ├── 1_Data Pipeline for AI .ipynb
-│   │   ├── 2_exploratory_analysis.ipynb
-│   │   ├── 3_Normalize_Numeric_Features _Train_Test Split.ipynb
-│   │   ├── 4_Verify Data Quality & Consistency.ipynb
-│   │   ├── 5_ML Diagnostic Engine — Predicting Query Performance.ipynb
-│   │   ├── models/
-│   │   │   ├── logistic_regression_reference.pkl
-│   │   │   ├── random_forest_reference.pkl
-│   │   │   ├── scaler.pkl
-│   │   │   ├── xgboost_slow_query_model.pkl
-│   │   │   └── xgboost_slow_query_model.json
-│   │   └── text.txt
-│   ├── notebooks/
-│   │   ├── 00_rl_index_optimization_agent.ipynb
-│   │   ├── 01_environment_check.ipynb
-│   │   ├── 02_mysql_connection.ipynb
-│   │   ├── 03_generate_fake_data.ipynb
-│   │   ├── 04_load_csv_into_mysql.ipynb
-│   │   ├── 05_MySQL_Monitoring_Setup.ipynb
-│   │   ├── 06_Enable_Performance_Schema.ipynb
-│   │   ├── 07_Capture Performance Metrics.ipynb
-│   │   ├── 08_Generate Realistic Slow Queries and Metrics.ipynb
-│   │   └── 09_Execution_Plan_and_Performance_Features.ipynb.ipynb
-│   └── rl/
-│       ├── envs.py
-│       ├── train.py
-│       ├── logs/
-│       │   └── monitor.csv
-│       ├── Models/
-│       │   ├── best_model.zip
-│       │   ├── env_metadata.json
-│       │   ├── ppo_index_optimizer.zip
-│       │   └── ppo_sadop_final.zip
-│       ├── tensorboard/
-│       │   ├── PPO_1/  (TensorBoard run logs)
-│       │   ├── PPO_2/
-│       │   ├── PPO_3/
-│       │   ├── PPO_4/
-│       │   ├── PPO_5/
-│       │   ├── PPO_6/
-│       │   ├── PPO_7/
-│       │   ├── PPO_8/
-│       │   ├── PPO_9/
-│       │   ├── PPO_10/
-│       │   └── PPO_11/
-│       └── tensorboard_archive/
-│           ├── PPO_1/
-│           └── PPO_2/
-└── (Git metadata and IDE config files omitted)
+│   └──  public
+│        ├── file.svg
+│        ├── globe.svg
+│        ├── next.svg
+│        ├── vercel.svg
+│        └── window.svg
+│
+├── llm
+│   ├── .gitkeep
+│   ├── prompt_templates.py
+│   └── sql_explainer.py
+├── monitoring
+│   ├── performance_schema_queries.sql
+│   └── slow_log_parser.py
+├── notebooks
+│   ├── 01_Mysql database ..ipynb
+│   ├── 02_loading the fakeres data.ipynb
+│   ├── 03_Generate Realistic Slow Queries and Metrics.ipynb
+│   └── 04_Cleaning the data set .ipynb
+├── rl
+│   ├── .gitkeep
+│   ├── 00_rl_index_optimization_agent.ipynb
+│   ├── Models
+│   │   ├── env_metadata.json
+│   │   └── ppo_index_optimizer.zip
+│   ├── RL_index_optimization_agent.ipynb
+│   ├── rl_logs
+│   │   └── monitor.csv
+│   └── rl_tensorboard
+│       ├── PPO_1
+│       │   └── events.out.tfevents.1766342679.DESKTOP-GK9TB81.8128.0
+│       ├── PPO_10
+│       │   └── events.out.tfevents.1766407373.DESKTOP-GK9TB81.49188.1
+│       ├── PPO_11
+│       │   └── events.out.tfevents.1766407423.DESKTOP-GK9TB81.49188.2
+│       ├── PPO_2
+│       │   └── events.out.tfevents.1766343461.DESKTOP-GK9TB81.8128.1
+│       ├── PPO_3
+│       │   └── events.out.tfevents.1766343473.DESKTOP-GK9TB81.8128.2
+│       ├── PPO_4
+│       │   └── events.out.tfevents.1766343521.DESKTOP-GK9TB81.45172.0
+│       ├── PPO_5
+│       │   └── events.out.tfevents.1766343583.DESKTOP-GK9TB81.45172.1
+│       ├── PPO_6
+│       │   └── events.out.tfevents.1766343645.DESKTOP-GK9TB81.45172.2
+│       ├── PPO_7
+│       │   └── events.out.tfevents.1766343848.DESKTOP-GK9TB81.45172.3
+│       ├── PPO_8
+│       │   └── events.out.tfevents.1766352475.DESKTOP-GK9TB81.28192.0
+│       └── PPO_9
+│           └── events.out.tfevents.1766407199.DESKTOP-GK9TB81.49188.0
+├── scripts
+|   └── verify_backend.py
+├── Projet-Homework.pdf
+├── ReadME.MD
+└── SADOP.jpg
 ```
 
 ### Backend Core (Detailed)
@@ -479,7 +478,7 @@ SADOP/
 
 #### 🔹 `backend/src/engines/ml_engine.py`
 
-**Purpose:** XGBoost performance prediction engine (95% accuracy).
+**Purpose:** Performance prediction engine (98.45% accuracy).
 
 #### 🔹 `backend/src/engines/rl_engine.py`
 
@@ -491,17 +490,13 @@ SADOP/
 
 ### Research Hub (Detailed)
 
-#### 🔹 `research/notebooks/`
+#### 🔹 `notebooks/`
 
 Contains the complete development cycle of the AI models, from data ingestion to evaluation.
 
-#### 🔹 `research/ml/models/`
+#### 🔹 `ML/models/`
 
 Storage for pre-trained XGBoost models.
-
-#### 🔹 `research/rl/Models/`
-
-Storage for trained PPO agents and environments.
 
 ### Frontend Interface (Detailed)
 
@@ -767,25 +762,26 @@ def _calculate_total_cost(self, indexes):
 
 ```python
 # Lines 76-91: PPO Hyperparameters
+LOG_DIR = "./rl_logs"
+os.makedirs(LOG_DIR, exist_ok=True)
+
+env = Monitor(IndexOptimizationEnv(df_rl), filename=os.path.join(LOG_DIR, "monitor.csv"))
+
+
 model = PPO(
- "MultiInputPolicy",  # Required for Dict observation space
- env,
- learning_rate=3e-4,
- n_steps=2048,        # Steps per policy update
- batch_size=64,
- gamma=0.99,          # Discount factor
- gae_lambda=0.95,     # Generalized Advantage Estimation
- clip_range=0.2,      # PPO clipping (prevents large policy updates)
- ent_coef=0.01,       # Entropy coefficient (encourages exploration)
- vf_coef=0.5,         # Value function coefficient
- max_grad_norm=0.5,   # Gradient clipping
- verbose=1,
- tensorboard_log="./tensorboard"
+    "MlpPolicy",
+    env,
+    learning_rate=3e-4,
+    n_steps=2048,
+    batch_size=256,
+    gamma=0.95,
+    ent_coef=0.01,
+    verbose=1
 )
 
 # Lines 97-101: Training
 model.learn(
- total_timesteps=100_000,  # 100k training steps
+ total_timesteps=300_000,  # 100k training steps
  callback=EvaluationCallback(eval_freq=5000),
  progress_bar=True
 )
@@ -814,7 +810,7 @@ class EvaluationCallback(BaseCallback):
 
 **Training Output:**
 
-- **Model**: `Models/ppo_sadop_final.zip`
+- **Model**: `Models/ppo_index_optimizer.zip`
 - **Metadata**: `Models/env_metadata.json`
 - **Logs**: `rl_logs/monitor.csv`
 - **TensorBoard**: `tensorboard/PPO_1/` through `PPO_11/`
@@ -823,7 +819,29 @@ class EvaluationCallback(BaseCallback):
 
 ---
 
+### Notebooks (Detailed)
+
+#### 🔹 `notebooks/01_Mysql database ..ipynb`
+
+Initial connectivity and testing of the MySQL database.
+
+#### 🔹 `notebooks/02_loading the fakeres data.ipynb`
+
+Script to load fake realistic data into the database for analysis.
+
+#### 🔹 `notebooks/03_Generate Realistic Slow Queries and Metrics.ipynb`
+
+Generates simulated slow query logs for training the performance models.
+
+#### 🔹 `notebooks/04_Cleaning the data set .ipynb`
+
+Cleans the parsed data for machine learning model ingestion.
+
+---
+
 ### ML Notebooks (Detailed)
+
+> **Latest Commit:** `eb9f72d chore: remove outdated notebooks and research artifacts`
 
 #### 🔹 `ML/1_Data Pipeline for AI.ipynb` (20,699 bytes)
 
@@ -898,22 +916,29 @@ class EvaluationCallback(BaseCallback):
 
 **Models Trained:**
 
-1. **XGBoost Classifier** (Best):
+1. **Random Forest** (Best):
 
-- Accuracy: 95.0%
-- Precision: 0.95
-- Recall: 0.95
-- F1-Score: 0.95
+- Accuracy: 0.9845
+- Precision: 0.9942
+- Recall: 0.9704
+- F1-Score: 0.9821
+- ROC-AUC: 0.9975
 
-2. **Logistic Regression**:
+2. **XGBoost Classifier**:
 
-- Accuracy: 94.0%
-- Baseline model
+- Accuracy: 0.9832
+- Precision: 0.9901
+- Recall: 0.9715
+- F1-Score: 0.9807
+- ROC-AUC: 0.9975
 
-3. **Random Forest**:
+3. **Logistic Regression**:
 
-- Accuracy: 95.0%
-- Reference model
+- Accuracy: 0.9589
+- Precision: 0.9354
+- Recall: 0.9738
+- F1-Score: 0.9542
+- ROC-AUC: 0.9944
 
 **Feature Importance (XGBoost):**
 
@@ -973,19 +998,20 @@ class EvaluationCallback(BaseCallback):
 
 ### ML Model Accuracy
 
-| Model               | Accuracy | F1-Score | Precision | Recall |
-| :------------------ | :------- | :------- | :-------- | :----- |
-| **XGBoost**         | 95.0%    | 0.95     | 0.95      | 0.95   |
-| Random Forest       | 93.0%    | 0.95     | 0.95      | 0.94   |
-| Logistic Regression | 93.0%    | 0.94     | 0.94      | 0.93   |
+| Model               | Accuracy | F1-Score | Precision | Recall | ROC-AUC |
+| :------------------ | :------- | :------- | :-------- | :----- | :------ |
+| **Random Forest**   | 98.45%   | 0.9821   | 0.9942    | 0.9704 | 0.9975  |
+| XGBoost             | 98.32%   | 0.9807   | 0.9901    | 0.9715 | 0.9975  |
+| Logistic Regression | 95.89%   | 0.9542   | 0.9354    | 0.9738 | 0.9944  |
 
 ### RL Agent Behavior
 
-- **Total Training**: 100,000 timesteps
+- **Total Training**: 301,056 timesteps
+- **Final Mean Reward**: ~9,760
 - **Action Distribution** (on dataset):
-- ADD_INDEX: 76.6%
-- DROP_INDEX: 23.4%
-- NO_OP: 0% (agent learned to be proactive)
+  - ADD_INDEX: 76.63% (15,323 actions)
+  - DROP_INDEX: 23.37% (4,672 actions)
+  - NO_OP: 0% (agent learned to be proactive)
 
 ### System Response Time
 

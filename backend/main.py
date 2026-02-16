@@ -6,7 +6,6 @@ from src.engines.ml_engine import predict_query_performance, extract_query_featu
 from src.engines.rl_engine import recommend_indexes_for_query
 from src.engines.llm_engine import generate_llm_diagnosis, generate_recommendation_explanation, generate_query_variations
 from src.core.llm_router import classify_prompt, handle_general_question, handle_optimization_request
-from src.core.database import get_db_connection
 
 app = FastAPI(title="SADOP API")
 
